@@ -216,7 +216,7 @@ func TestCompetitionService_Teams(t *testing.T) {
 
 	team := Team{
 		ID: 4,
-		Area: Area{
+		Area: &Area{
 			ID:   2088,
 			Name: "Germany",
 		},

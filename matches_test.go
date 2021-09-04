@@ -164,19 +164,19 @@ func TestMatchService_Find(t *testing.T) {
 	team := Team{
 		ID:   1765,
 		Name: "Fluminense FC",
-		Coach: Coach{
+		Coach: &Coach{
 			ID:             73229,
 			Name:           "Marcelo Oliveira",
 			CountryOfBirth: "Brazil",
 			Nationality:    "Brazil",
 		},
-		Captain: Player{
+		Captain: &Player{
 			ID:          1068,
 			Name:        "Gum",
 			ShirtNumber: 3,
 		},
-		Lineup: []Player{player},
-		Bench:  []Player{player},
+		Lineup: &[]Player{player},
+		Bench:  &[]Player{player},
 	}
 
 	score := Score{

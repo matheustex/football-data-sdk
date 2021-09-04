@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-type PlayersService service
+type PlayerService service
 
 type Player struct {
 	ID             int64  `json:"id,omitempty"`
@@ -19,6 +19,7 @@ type Player struct {
 	Position       string `json:"position,omitempty"`
 	ShirtNumber    int    `json:"shirtNumber,omitempty"`
 	LastUpdated    string `json:"lastUpdated,omitempty"`
+	Role           string `json:"role,omitempty"`
 }
 
 type PlayerFiltersOptions struct {
@@ -29,7 +30,14 @@ type PlayerFiltersOptions struct {
 	Limit        int64  `json:"limit,omitempty"`
 }
 
-func (s *PlayersService) Find(ctx context.Context, id string) (*Player, error) {
+type PlayerMatches struct {
+	Count   int                    `json:"count,omitempty"`
+	Filters map[string]interface{} `json:"filters,omitempty"`
+	Player  Player                 `json:"player,omitempty"`
+	Matches []Match                `json:"matches,omitempty"`
+}
+
+func (s *PlayerService) Find(ctx context.Context, id string) (*Player, error) {
 	if len(id) == 0 {
 		return nil, errors.New("playerId is required")
 	}
@@ -44,17 +52,17 @@ func (s *PlayersService) Find(ctx context.Context, id string) (*Player, error) {
 	return player, nil
 }
 
-func (s *PlayersService) FindMatches(ctx context.Context, id string) (*Player, error) {
+func (s *PlayerService) Matches(ctx context.Context, id string, filters *PlayerFiltersOptions) (*PlayerMatches, error) {
 	if len(id) == 0 {
 		return nil, errors.New("playerId is required")
 	}
 
-	player := &Player{}
+	playerMatches := &PlayerMatches{}
 
-	_, err := s.client.Get(fmt.Sprintf("players/%s/matches", id), nil, &player)
+	_, err := s.client.Get(fmt.Sprintf("players/%s/matches", id), filters, &playerMatches)
 	if err != nil {
 		return nil, err
 	}
 
-	return player, nil
+	return playerMatches, nil
 }

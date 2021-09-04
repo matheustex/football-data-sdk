@@ -35,7 +35,6 @@ type MatchesFiltersOptions struct {
 	DateTo       string `json:"dateTo,omitempty"`
 	Status       string `json:"status,omitempty"`
 	Competitions string `json:"competitions,omitempty"`
-	Limit        int64  `json:"limit,omitempty"`
 }
 
 type MatchResponse struct {

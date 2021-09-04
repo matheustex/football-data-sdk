@@ -2,7 +2,6 @@ package football
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"testing"
@@ -10,92 +9,110 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPlayerService_Find(t *testing.T) {
+func TestTeamService_Find(t *testing.T) {
 	httpClient, mux, server := testServer()
 	defer server.Close()
 
-	mux.HandleFunc("/v2/players/1", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v2/teams/1", func(w http.ResponseWriter, r *http.Request) {
 		assertMethod(t, "GET", r)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, `{
-			"id": 1,
-			"name": "Illarramendi",
-			"firstName": "Asier",
-			"lastName": null,
-			"dateOfBirth": "1990-03-08",
-			"countryOfBirth": "Spain",
-			"nationality": "Spain",
-			"position": "Midfielder",
-			"shirtNumber": null,
-			"lastUpdated": "2020-09-07T21:26:05Z"
+			"id": 18,
+			"area": {
+				"id": 2088,
+				"name": "Germany"
+			},
+			"activeCompetitions": [
+				{
+					"id": 2002,
+					"area": {
+						"id": 2088,
+						"name": "Germany"
+					},
+					"name": "Bundesliga",
+					"code": "BL1",
+					"plan": "TIER_ONE",
+					"lastUpdated": "2021-04-17T00:20:14Z"
+				}				
+			],
+			"name": "Borussia Mönchengladbach",
+			"shortName": "M'gladbach",
+			"tla": "BMG",
+			"crestUrl": "https://crests.football-data.org/18.svg",
+			"clubColors": "Black / White / Green",
+			"venue": "Stadion im Borussia-Park",
+			"squad": [
+				{
+					"id": 3176,
+					"name": "Matthias Ginter",
+					"position": "Defender",
+					"dateOfBirth": "1994-01-19T00:00:00Z",
+					"countryOfBirth": "Germany",
+					"nationality": "Germany",
+					"shirtNumber": null,
+					"role": "PLAYER"
+				}
+			],
+			"lastUpdated": "2020-11-26T02:04:29Z"
 		}`)
 	})
 
-	expected := &Player{
-		ID:             1,
-		Name:           "Illarramendi",
-		FirstName:      "Asier",
-		DateOfBirth:    "1990-03-08",
-		CountryOfBirth: "Spain",
-		Nationality:    "Spain",
-		Position:       "Midfielder",
-		LastUpdated:    "2020-09-07T21:26:05Z",
+	expected := Team{
+		ID: 18,
+		Area: &Area{
+			ID:   2088,
+			Name: "Germany",
+		},
+		ActiveCompetitions: &[]Competition{
+			{
+				ID: 2002,
+				Area: Area{
+					ID:   2088,
+					Name: "Germany",
+				},
+				Name:        "Bundesliga",
+				Code:        "BL1",
+				Plan:        "TIER_ONE",
+				LastUpdated: "2021-04-17T00:20:14Z",
+			},
+		},
+		Name:       "Borussia Mönchengladbach",
+		ShortName:  "M'gladbach",
+		Tla:        "BMG",
+		CrestURL:   "https://crests.football-data.org/18.svg",
+		ClubColors: "Black / White / Green",
+		Venue:      "Stadion im Borussia-Park",
+		Squad: &[]Player{
+			{
+				ID:             3176,
+				Name:           "Matthias Ginter",
+				Position:       "Defender",
+				DateOfBirth:    "1994-01-19T00:00:00Z",
+				CountryOfBirth: "Germany",
+				Nationality:    "Germany",
+				Role:           "PLAYER",
+			},
+		},
+		LastUpdated: "2020-11-26T02:04:29Z",
 	}
 
 	ctx := context.Background()
 	client := NewClient(httpClient)
-	player, err := client.Players.Find(ctx, "1")
+	matchResponse, err := client.Teams.Find(ctx, "1")
 
 	assert.Nil(t, err)
-	assert.Equal(t, expected, player)
+	assert.Equal(t, expected, *matchResponse)
 }
 
-func TestPlayerService_FindWithError(t *testing.T) {
+func TestTeamService_Matches(t *testing.T) {
 	httpClient, mux, server := testServer()
 	defer server.Close()
 
-	mux.HandleFunc("/v2/players/55555", func(w http.ResponseWriter, r *http.Request) {
-		assertMethod(t, "GET", r)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, `{
-			"message": "The resource you are looking for does not exist.",
-			"error": 404
-		}`)
-	})
-
-	expected := errors.New("404 Not Found")
-
-	ctx := context.Background()
-	client := NewClient(httpClient)
-	_, err := client.Players.Find(ctx, "55555")
-
-	assert.NotNil(t, err)
-
-	if !ErrorContains(err, expected.Error()) {
-		t.Errorf("unexpected error: %v", err)
-	}
-}
-
-func TestPlayerService_Matches(t *testing.T) {
-	httpClient, mux, server := testServer()
-	defer server.Close()
-
-	mux.HandleFunc("/v2/players/18/matches", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v2/teams/18/matches", func(w http.ResponseWriter, r *http.Request) {
 		assertMethod(t, "GET", r)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, `{
 			"count": 1,
-			"player": {
-				"id": 18,
-				"name": "Joaquín",
-				"firstName": "Joaquín",
-				"dateOfBirth": "1981-07-21",
-				"countryOfBirth": "Spain",
-				"nationality": "Spain",
-				"position": "Midfielder",
-				"lastUpdated": "2020-11-26T02:18:33Z"
-			},
 			"matches": [
 				{
 					"id": 328846,
@@ -182,26 +199,14 @@ func TestPlayerService_Matches(t *testing.T) {
 		},
 	}
 
-	player := &Player{
-		ID:             18,
-		Name:           "Joaquín",
-		FirstName:      "Joaquín",
-		DateOfBirth:    "1981-07-21",
-		CountryOfBirth: "Spain",
-		Nationality:    "Spain",
-		Position:       "Midfielder",
-		LastUpdated:    "2020-11-26T02:18:33Z",
-	}
-
-	expected := &PlayerMatches{
+	expected := &TeamMatches{
 		Count:   1,
-		Player:  *player,
 		Matches: []Match{match},
 	}
 
 	ctx := context.Background()
 	client := NewClient(httpClient)
-	list, err := client.Players.Matches(ctx, "18", nil)
+	list, err := client.Teams.Matches(ctx, "18", nil)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expected, list)

@@ -26,8 +26,8 @@ type Client struct {
 	Areas        *AreasService
 	Competitions *CompetitionService
 	Matches      *MatchService
-	Players      *PlayersService
-	Teams        *TeamsService
+	Players      *PlayerService
+	Teams        *TeamService
 }
 
 type service struct {
@@ -51,8 +51,8 @@ func NewClient(httpClient *http.Client) *Client {
 	c.Areas = (*AreasService)(&c.common)
 	c.Competitions = (*CompetitionService)(&c.common)
 	c.Matches = (*MatchService)(&c.common)
-	c.Players = (*PlayersService)(&c.common)
-	c.Teams = (*TeamsService)(&c.common)
+	c.Players = (*PlayerService)(&c.common)
+	c.Teams = (*TeamService)(&c.common)
 
 	return c
 }
@@ -102,7 +102,7 @@ func (c *Client) Get(path string, params interface{}, v interface{}) ([]byte, er
 func (client *Client) GetHeaders() http.Header {
 	headers := &http.Header{}
 
-	headers.Set("X-Auth-Token", "")
+	headers.Set("X-Auth-Token", "d939fc4b704148a9b94f3860dea3038b")
 
 	return *headers
 }

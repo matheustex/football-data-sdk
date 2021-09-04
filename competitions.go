@@ -139,11 +139,11 @@ func (s *CompetitionService) Standings(ctx context.Context, id string, filters *
 }
 
 func (s *CompetitionService) Matches(ctx context.Context, id string, filters *CompetitionMatchesFiltersOptions) (*CompetitionMatches, error) {
-	competitionMatches := &CompetitionMatches{}
-
 	if len(id) == 0 {
 		return nil, errors.New("Competition ID is required")
 	}
+
+	competitionMatches := &CompetitionMatches{}
 
 	_, err := s.client.Get(fmt.Sprintf("competitions/%s/matches", id), filters, &competitionMatches)
 	if err != nil {
@@ -154,11 +154,11 @@ func (s *CompetitionService) Matches(ctx context.Context, id string, filters *Co
 }
 
 func (s *CompetitionService) Scorers(ctx context.Context, id string, filters *CompetitionScorersFiltersOptions) (*CompetitionScorers, error) {
-	competitionScorers := &CompetitionScorers{}
-
 	if len(id) == 0 {
 		return nil, errors.New("Competition ID is required")
 	}
+
+	competitionScorers := &CompetitionScorers{}
 
 	_, err := s.client.Get(fmt.Sprintf("competitions/%s/scorers", id), filters, &competitionScorers)
 	if err != nil {
