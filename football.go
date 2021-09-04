@@ -23,7 +23,7 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the Football API.
-	Areas        *AreasService
+	Areas        *AreaService
 	Competitions *CompetitionService
 	Matches      *MatchService
 	Players      *PlayerService
@@ -48,7 +48,7 @@ func NewClient(httpClient *http.Client) *Client {
 
 	c.common.client = c
 
-	c.Areas = (*AreasService)(&c.common)
+	c.Areas = (*AreaService)(&c.common)
 	c.Competitions = (*CompetitionService)(&c.common)
 	c.Matches = (*MatchService)(&c.common)
 	c.Players = (*PlayerService)(&c.common)
