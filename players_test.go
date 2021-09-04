@@ -32,14 +32,14 @@ func TestPlayerService_Find(t *testing.T) {
 	})
 
 	expected := &Player{
-		ID:             Int64(1),
-		Name:           String("Illarramendi"),
-		FirstName:      String("Asier"),
-		DateOfBirth:    String("1990-03-08"),
-		CountryOfBirth: String("Spain"),
-		Nationality:    String("Spain"),
-		Position:       String("Midfielder"),
-		LastUpdated:    String("2020-09-07T21:26:05Z"),
+		ID:             1,
+		Name:           "Illarramendi",
+		FirstName:      "Asier",
+		DateOfBirth:    "1990-03-08",
+		CountryOfBirth: "Spain",
+		Nationality:    "Spain",
+		Position:       "Midfielder",
+		LastUpdated:    "2020-09-07T21:26:05Z",
 	}
 
 	ctx := context.Background()

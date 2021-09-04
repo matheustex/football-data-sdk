@@ -8,7 +8,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
+
+	"github.com/google/go-querystring/query"
 )
 
 const (
@@ -24,7 +25,7 @@ type Client struct {
 	// Services used for talking to different parts of the Football API.
 	Areas        *AreasService
 	Competitions *CompetitionService
-	Matches      *MatchesService
+	Matches      *MatchService
 	Players      *PlayersService
 	Teams        *TeamsService
 }
@@ -49,7 +50,7 @@ func NewClient(httpClient *http.Client) *Client {
 
 	c.Areas = (*AreasService)(&c.common)
 	c.Competitions = (*CompetitionService)(&c.common)
-	c.Matches = (*MatchesService)(&c.common)
+	c.Matches = (*MatchService)(&c.common)
 	c.Players = (*PlayersService)(&c.common)
 	c.Teams = (*TeamsService)(&c.common)
 
@@ -57,11 +58,9 @@ func NewClient(httpClient *http.Client) *Client {
 }
 
 // Get performs a GET against the api
-func (c *Client) Get(path string, params *url.Values, v interface{}) ([]byte, error) {
+func (c *Client) Get(path string, params interface{}, v interface{}) ([]byte, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-
-	fmt.Println(fmt.Sprintf("%s/%s", APIURL, path))
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", APIURL, path), nil)
 	if err != nil {
@@ -69,7 +68,9 @@ func (c *Client) Get(path string, params *url.Values, v interface{}) ([]byte, er
 	}
 
 	if params != nil {
-		req.URL.RawQuery = params.Encode()
+		query, _ := query.Values(params)
+
+		req.URL.RawQuery = query.Encode()
 	}
 
 	req.Header = c.GetHeaders()
@@ -101,7 +102,7 @@ func (c *Client) Get(path string, params *url.Values, v interface{}) ([]byte, er
 func (client *Client) GetHeaders() http.Header {
 	headers := &http.Header{}
 
-	headers.Set("X-Auth-Token", os.Getenv("FOOTBALL_API_KEY"))
+	headers.Set("X-Auth-Token", "")
 
 	return *headers
 }
