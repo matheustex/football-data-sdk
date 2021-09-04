@@ -102,7 +102,7 @@ func (c *Client) Get(path string, params interface{}, v interface{}) ([]byte, er
 func (client *Client) GetHeaders() http.Header {
 	headers := &http.Header{}
 
-	headers.Set("X-Auth-Token", "d939fc4b704148a9b94f3860dea3038b")
+	headers.Set("X-Auth-Token", "")
 
 	return *headers
 }
