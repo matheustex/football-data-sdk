@@ -56,26 +56,3 @@ func ErrorContains(out error, want string) bool {
 	return strings.Contains(out.Error(), want)
 }
 
-// assertDone asserts that the empty struct channel is closed before the given
-// timeout elapses.
-func assertDone(t *testing.T, ch <-chan struct{}, timeout time.Duration) {
-	select {
-	case <-ch:
-		_, more := <-ch
-		assert.False(t, more)
-	case <-time.After(timeout):
-		t.Errorf("expected channel to be closed within timeout %v", timeout)
-	}
-}
-
-// assertClosed asserts that the channel is closed before the given timeout
-// elapses.
-func assertClosed(t *testing.T, ch <-chan interface{}, timeout time.Duration) {
-	select {
-	case <-ch:
-		_, more := <-ch
-		assert.False(t, more)
-	case <-time.After(timeout):
-		t.Errorf("expected channel to be closed within timeout %v", timeout)
-	}
-}

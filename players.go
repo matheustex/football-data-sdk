@@ -6,8 +6,11 @@ import (
 	"fmt"
 )
 
+// PlayerService provides methods for accessing information
+// about players.
 type PlayerService service
 
+// Player represents data about a Player
 type Player struct {
 	ID             int64  `json:"id,omitempty"`
 	Name           string `json:"name,omitempty"`
@@ -37,6 +40,9 @@ type PlayerMatches struct {
 	Matches []Match                `json:"matches,omitempty"`
 }
 
+// Find takes a Player ID and returns the corresponding Player
+// for that ID.
+// https://www.football-data.org/documentation/api
 func (s *PlayerService) Find(ctx context.Context, id string) (*Player, error) {
 	if len(id) == 0 {
 		return nil, errors.New("playerId is required")
@@ -52,6 +58,9 @@ func (s *PlayerService) Find(ctx context.Context, id string) (*Player, error) {
 	return player, nil
 }
 
+// Matches takes a Player ID and returns a 
+// collection of all matches for that Player.
+// https://www.football-data.org/documentation/api
 func (s *PlayerService) Matches(ctx context.Context, id string, filters *PlayerFiltersOptions) (*PlayerMatches, error) {
 	if len(id) == 0 {
 		return nil, errors.New("playerId is required")

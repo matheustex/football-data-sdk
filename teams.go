@@ -6,8 +6,11 @@ import (
 	"fmt"
 )
 
+// TeamService provides methods for accessing information
+// about teams.
 type TeamService service
 
+// Team represents data about a Team
 type Team struct {
 	ID                 int            `json:"id,omitempty"`
 	Area               *Area          `json:"area,omitempty"`
@@ -31,6 +34,8 @@ type Team struct {
 	LastUpdated        string         `json:"lastUpdated,omitempty"`
 }
 
+// TeamMatches represents a collection of Matches for
+// a Team
 type TeamMatches struct {
 	Count   int                    `json:"count,omitempty"`
 	Filters map[string]interface{} `json:"filters,omitempty"`
@@ -45,6 +50,9 @@ type TeamMatchesFiltersOptions struct {
 	Limit    int64  `json:"limit,omitempty"`
 }
 
+// Find takes a Team ID and returns the corresponding Team
+// for that ID.
+// https://www.football-data.org/documentation/api
 func (s *TeamService) Find(ctx context.Context, id string) (*Team, error) {
 	if len(id) == 0 {
 		return nil, errors.New("Team ID is required")
@@ -60,6 +68,9 @@ func (s *TeamService) Find(ctx context.Context, id string) (*Team, error) {
 	return team, nil
 }
 
+// Matches takes a Team ID and returns a 
+// collection of all Matches for that Team.
+// https://www.football-data.org/documentation/api
 func (s *TeamService) Matches(ctx context.Context, id string, filters *TeamMatchesFiltersOptions) (*TeamMatches, error) {
 	if len(id) == 0 {
 		return nil, errors.New("Team ID is required")

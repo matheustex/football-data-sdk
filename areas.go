@@ -6,8 +6,11 @@ import (
 	"fmt"
 )
 
+// AreaService provides methods for accessing information
+// about areas.
 type AreaService service
 
+// Area represents data about a Area.
 type Area struct {
 	ID           int     `json:"id,omitempty"`
 	Name         string  `json:"name,omitempty"`
@@ -18,12 +21,16 @@ type Area struct {
 	ChildAreas   *[]Area `json:"childAreas,omitempty"`
 }
 
+// AreaList represents a collection of Areas
 type AreaList struct {
 	Count   int                    `json:"count,omitempty"`
 	Filters map[string]interface{} `json:"filters,omitempty"`
 	Areas   []Area                 `json:"areas,omitempty"`
 }
 
+// Find takes a Area ID and returns the corresponding Area
+// for that ID.
+// https://www.football-data.org/documentation/api
 func (s *AreaService) Find(ctx context.Context, id string) (*Area, error) {
 	if len(id) == 0 {
 		return nil, errors.New("playerId is required")
@@ -39,6 +46,8 @@ func (s *AreaService) Find(ctx context.Context, id string) (*Area, error) {
 	return area, nil
 }
 
+// List returns a collection of all areas.
+// https://www.football-data.org/documentation/api
 func (s *AreaService) List(ctx context.Context) (*AreaList, error) {
 	areas := &AreaList{}
 

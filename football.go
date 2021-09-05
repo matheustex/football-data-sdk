@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -19,7 +20,6 @@ const (
 type Client struct {
 	client  *http.Client // HTTP client used to communicate with the API.
 	BaseURL *url.URL
-
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the Football API.
@@ -35,9 +35,7 @@ type service struct {
 }
 
 // NewClient returns a new GitHub API client. If a nil httpClient is
-// provided, a new http.Client will be used. To use API methods which require
-// authentication, provide an http.Client that will perform the authentication
-// for you (such as that provided by the golang.org/x/oauth2 library).
+// provided, a new http.Client will be used.
 func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = &http.Client{}
@@ -102,23 +100,8 @@ func (c *Client) Get(path string, params interface{}, v interface{}) ([]byte, er
 func (client *Client) GetHeaders() http.Header {
 	headers := &http.Header{}
 
-	headers.Set("X-Auth-Token", "")
+	headers.Set("X-Auth-Token", os.Getenv("FOOTBALL_API_TOKEN"))
 
 	return *headers
 }
 
-// Bool is a helper routine that allocates a new bool value
-// to store v and returns a pointer to it.
-func Bool(v bool) *bool { return &v }
-
-// Int is a helper routine that allocates a new int value
-// to store v and returns a pointer to it.
-func Int(v int) *int { return &v }
-
-// Int64 is a helper routine that allocates a new int64 value
-// to store v and returns a pointer to it.
-func Int64(v int64) *int64 { return &v }
-
-// String is a helper routine that allocates a new string value
-// to store v and returns a pointer to it.
-func String(v string) *string { return &v }

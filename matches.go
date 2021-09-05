@@ -6,8 +6,11 @@ import (
 	"fmt"
 )
 
+// AreaService provides methods for accessing information
+// about matches.
 type MatchService service
 
+// Match represents data about a Match
 type Match struct {
 	ID            int             `json:"id,omitempty"`
 	Competition   *Competition    `json:"competition,omitempty"`
@@ -42,12 +45,17 @@ type MatchResponse struct {
 	Match     Match     `json:"match,omitempty"`
 }
 
+// MatchesCompetition represents a collection of Matches for
+// a competition
 type MatchesCompetition struct {
 	Count   int                    `json:"count,omitempty"`
 	Filters map[string]interface{} `json:"filters,omitempty"`
 	Matches []Match                `json:"matches,omitempty"`
 }
 
+// Find takes a Match ID and returns the corresponding Match
+// for that ID.
+// https://www.football-data.org/documentation/api
 func (s *MatchService) Find(ctx context.Context, id string) (*MatchResponse, error) {
 	if len(id) == 0 {
 		return nil, errors.New("Match ID is required")
@@ -63,6 +71,8 @@ func (s *MatchService) Find(ctx context.Context, id string) (*MatchResponse, err
 	return match, nil
 }
 
+// List returns a collection of all Matches.
+// https://www.football-data.org/documentation/api
 func (s *MatchService) List(ctx context.Context, filters *MatchesFiltersOptions) (*MatchesCompetition, error) {
 	matchesCompetition := &MatchesCompetition{}
 
