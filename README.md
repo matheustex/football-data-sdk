@@ -3,7 +3,7 @@
 [![GoDoc](https://img.shields.io/static/v1?label=godoc&message=reference&color=blue)](https://pkg.go.dev/github.com/matheustex/football-data-sdk)
 [![Test Status](https://github.com/google/go-github/workflows/tests/badge.svg)](https://github.com/matheustex/football-data-sdk/actions?query=workflow%3Atests)
 
-football-data-sdk is a Go client library for accessing the [Football Data API][https://www.football-data.org/documentation/api].
+football-data-sdk is a Go client library for accessing the [Football Data API](https://www.football-data.org/documentation/api).
 
 Successful queries return native Go structs.
 
@@ -43,7 +43,7 @@ import "github.com/matheus-tex/football-data-sdk"
 client := football.NewClient(nil)
 
 // list all competitions
-competitions, _, err := client.Competitions.List(context.Background(), nil)
+competitions, err := client.Competitions.List(context.Background(), nil)
 ```
 
 Some API methods have optional parameters that can be passed. For example:
