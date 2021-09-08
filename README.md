@@ -40,7 +40,7 @@ import "github.com/matheus-tex/football-data-sdk"
 ```
 
 ```go
-client := football.NewClient(nil)
+client := football.NewClient()
 
 // list all competitions
 competitions, err := client.Competitions.List(context.Background(), nil)
