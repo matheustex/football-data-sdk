@@ -1,4 +1,4 @@
-module football
+module github.com/matheustex/football-data-sdk
 
 go 1.16
 

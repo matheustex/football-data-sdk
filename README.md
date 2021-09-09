@@ -56,6 +56,8 @@ filters := &football.PlayerFiltersOptions{Limit: "5"}
 matches, err := client.Players.Matches(context.Background(), "1", filters)
 ```
 
+Make sure to export the env FOOTBALL_API_TOKEN with your API_TOKEN.
+
 ## License ##
 
 This library is distributed under the MIT license found in the [LICENSE](./LICENSE)
