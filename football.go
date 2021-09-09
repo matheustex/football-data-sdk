@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/google/go-querystring/query"
 )
@@ -20,7 +20,7 @@ const (
 type Client struct {
 	client  *http.Client // HTTP client used to communicate with the API.
 	BaseURL *url.URL
-	common service // Reuse a single struct instead of allocating one for each service on the heap.
+	common  service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the Football API.
 	Areas        *AreaService
@@ -57,6 +57,10 @@ func NewClient(httpClient *http.Client) *Client {
 
 // Get performs a GET against the api
 func (c *Client) Get(path string, params interface{}, v interface{}) ([]byte, error) {
+	if len(os.Getenv("FOOTBALL_API_TOKEN")) == 0 {
+		return nil, errors.New("You need to export the FOOTBALL_API_TOKEN")
+	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -104,4 +108,3 @@ func (client *Client) GetHeaders() http.Header {
 
 	return *headers
 }
-
