@@ -20,7 +20,7 @@ Successful queries return native Go structs.
 football-data-sdk is compatible with modern Go releases in module mode, with Go installed:
 
 ```bash
-go get github.com/matheus-tex/football-data-sdk
+go get github.com/matheustex/football-data-sdk
 ```
 
 will resolve and add the package to the current development module, along with its dependencies.
@@ -28,7 +28,7 @@ will resolve and add the package to the current development module, along with i
 Alternatively the same can be achieved if you use import in a package:
 
 ```go
-import "github.com/matheus-tex/football-data-sdk"
+import "github.com/matheustex/football-data-sdk"
 ```
 
 and run `go get` without parameters.
@@ -36,7 +36,7 @@ and run `go get` without parameters.
 ## Usage ##
 
 ```go
-import "github.com/matheus-tex/football-data-sdk"
+import "github.com/matheustex/football-data-sdk"
 ```
 
 ```go
